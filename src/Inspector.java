@@ -11,11 +11,13 @@ public class Inspector {
     private void inspectClass(Class c, Object obj, boolean recursive, int depth){
         inspectSuperClass(c, obj, recursive, depth);
         inspectInterface(c, obj, recursive, depth);
+        //inspectConstructor(c, obj, depth);
+        //inspectMethod(c, obj, depth);
+        //inspectField(c, obj, recursive, depth);
     }
 
     private void inspectSuperClass(Class c, Object obj, boolean recursive, int depth){
-        Class superClass = c.getSuperclass();
-
+        System.out.println("inspecting super class of " + c);
         // handling formatting
         String tab = "";
         for(int i=0; i<depth; i++){
@@ -25,14 +27,21 @@ public class Inspector {
         //print class we are currently looking at
         System.out.println(tab + "CLASS: " + c.getName());
 
-        // Check if I reached the object class
-        if (!c.equals(Object.class)){
-            System.out.println(tab + "\tSUPERCLASS: " + superClass.getName());
-            inspectClass(superClass, obj, recursive, depth+2);
+        Class superClass = c.getSuperclass();
+
+        // handle case when class and superclass both equal object
+        if(c.equals(Object.class) && superClass == null){
+            return;
         }
+        //print next superclass
+        System.out.println(tab + "\tSUPERCLASS: " + superClass.getName());
+        inspectClass(superClass, obj, recursive, depth+2);
+
     }
 
     private void inspectInterface(Class c, Object obj, boolean recursive, int depth){
+        System.out.println("inspecting interface for " + c);
+        depth += 1;
         Class[] interfaces = c.getInterfaces();
 
         // handling formatting
@@ -46,7 +55,10 @@ public class Inspector {
         }else{
             // class does have interfaces
             for(int i = 0; i < interfaces.length; i++){
-                inspectClass(interfaces[i], obj,recursive, depth + 2);
+                System.out.println("INTERFACE: " + interfaces[i]);
+                inspectInterface(interfaces[i], obj, recursive, depth);
+                //inspectConstructor(interfaces[i], obj,recursive, depth);
+
             }
         }
     }
