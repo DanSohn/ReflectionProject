@@ -12,7 +12,7 @@ public class Inspector {
         inspectSuperClass(c, recursive, depth);
         inspectInterface(c, recursive, depth);
         inspectConstructor(c, depth);
-        //inspectMethod(c, depth);
+        inspectMethod(c, depth);
         //inspectField(c, recursive, depth);
     }
 
@@ -72,7 +72,7 @@ public class Inspector {
         }
         String tab2 = tab + "\t";
         // list of each constructors for a class
-        Constructor[] constructors = c.getConstructors();
+        Constructor[] constructors = c.getDeclaredConstructors();
         for (int i = 0; i < constructors.length; i++){
             System.out.println(tab + "CONSTRUCTOR:");
             System.out.println(tab2 + "Name: " + constructors[i].getName());
@@ -94,7 +94,54 @@ public class Inspector {
     }
 
     private void inspectMethod(Class c, int depth){
-        
+        depth += 1;
+        // handling formatting
+        String tab = "";
+        for(int i=0; i<depth; i++){
+            tab += "\t";
+        }
+        String tab2 = tab + "\t";
+
+        //get methods
+        Method[] methods = c.getDeclaredMethods();
+        //iterate through all methods
+        for (int i = 0; i < methods.length; i++){
+            System.out.println(tab + "METHOD:");
+
+            //name
+            System.out.println(tab2 + "Name: " + methods[i].getName());
+
+            //exceptions
+            Class[] exceptionTypes = methods[i].getExceptionTypes();
+            System.out.print(tab2 + "Exception Types: ");
+            if (exceptionTypes.length == 0){
+                System.out.println("None");
+            }else {
+                for (Class exception : exceptionTypes) {
+                    System.out.print(exception.getName() + " ");
+                }
+                System.out.println("");
+            }
+
+            //parameters
+            Class[] parameterTypes = methods[i].getParameterTypes();
+            System.out.print(tab2 + "Parameter Types: ");
+            if (parameterTypes.length == 0){
+                System.out.println("None");
+            }else {
+                for (Class parameter : parameterTypes) {
+                    System.out.print(parameter.getName() + " ");
+                }
+                System.out.println("");
+            }
+
+            //return type
+            System.out.println(tab2 + "Return Type: " + methods[i].getReturnType().getName());
+
+            //modifier
+            System.out.println(tab2 + "Modifier: " + methods[i].getModifiers());
+        }
+
     }
 
     private void inspectField(Class c, boolean recursive, int depth){
