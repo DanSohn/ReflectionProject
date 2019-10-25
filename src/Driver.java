@@ -4,6 +4,7 @@ import java.io.*;
 public class Driver {
 
     public static void main(String[] args) throws Exception {
+        System.out.println("Starting driver");
         boolean rec = true;
         if (args.length == 1) {
             rec = Boolean.parseBoolean(args[1]);
@@ -16,9 +17,11 @@ public class Driver {
         runTest("script6.txt", new ClassB[12], rec);
         runTest("script7.txt", new ClassB[12][12], rec);
         runTest("script8.txt", "Test String", rec);
+        System.out.println("Completed tests!");
     }
 
     public static void runTest(String filename, Object testObj, boolean recursive) {
+        //System.out.println("Running test");
         try {
             PrintStream old = System.out;
             File file = new File(filename);
