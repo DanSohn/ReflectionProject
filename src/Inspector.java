@@ -28,8 +28,12 @@ public class Inspector {
         }
 
         //print class we are currently looking at
-        System.out.println(tab + "CLASS: " + c.getName());
-
+        //check if its an array
+        if(c.isArray()){
+            System.out.println(tab + "CLASS: " + c.getComponentType().getName() + "[]");
+        }else {
+            System.out.println(tab + "CLASS: " + c.getName());
+        }
         Class superClass = c.getSuperclass();
 
         // handle case when class and superclass both equal object
@@ -58,7 +62,7 @@ public class Inspector {
         }else{
             // class does have interfaces
             for(int i = 0; i < interfaces.length; i++){
-                System.out.println(tab + "INTERFACE: " + interfaces[i]);
+                System.out.println(tab + "INTERFACE: " + interfaces[i].getName());
                 inspectInterface(interfaces[i], obj, recursive, depth);
                 inspectMethod(interfaces[i], depth);
                 inspectField(interfaces[i], obj, recursive, depth);
@@ -202,17 +206,37 @@ public class Inspector {
                 continue;
             }
 
+            //if primitive wrapper
             if (isWrapperType(value.getClass())){
-                //if primitive wrapper
                 System.out.println(tab2 + "Value: " + value.toString());
+            //if array
+            }else if(value.getClass().isArray()) {
+                //print out name, component type, length, and contents
+                System.out.println(tab2 + "Value: ");
+                //component type:
+                System.out.println(tab2 + "\tType: " + fields[i].getType().getComponentType());
+                //length:
+                int len = Array.getLength(value);
+                System.out.println(tab2 + "\tLength: " + len);
+                //contents:
+                System.out.println(tab2 + "\tContents: [");
+                //contents of the array
+                for(int j = 0; j < len; j ++){
+                    Object arrObj = Array.get(value, j);
+                    System.out.println(tab2 + "\t\t" + arrObj);
+                }
+                System.out.println(tab2 + "\t]");
+
+
             }else{
                 //if object reference
+
                 if (recursive) {
                     //do i need to use Class getDeclaringClass()
                 } else {
 
                 }
-                System.out.println(tab2 + "Value: " + value.getClass() + "@" + identityHashCode(obj));
+                System.out.println(tab2 + "Value: " + value.getClass().getName() + "@" + identityHashCode(obj));
             }
 
 
