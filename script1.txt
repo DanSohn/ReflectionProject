@@ -1,0 +1,152 @@
+======================================================
+Filename: script1.txt
+Running Test: ClassA
+Recursive: false
+CLASS: ClassA
+	SUPERCLASS: java.lang.Object
+		CLASS: java.lang.Object
+			** NO SUPERINTERFACE **
+			CONSTRUCTOR:
+				Name: java.lang.Object
+				Parameter Types: None
+				Modifier: public
+			METHOD:
+				Name: finalize
+				Exception Types: java.lang.Throwable 
+				Parameter Types: None
+				Return Type: void
+				Modifier: protected
+			METHOD:
+				Name: wait
+				Exception Types: java.lang.InterruptedException 
+				Parameter Types: None
+				Return Type: void
+				Modifier: public final
+			METHOD:
+				Name: wait
+				Exception Types: java.lang.InterruptedException 
+				Parameter Types: long int 
+				Return Type: void
+				Modifier: public final
+			METHOD:
+				Name: wait
+				Exception Types: java.lang.InterruptedException 
+				Parameter Types: long 
+				Return Type: void
+				Modifier: public final native
+			METHOD:
+				Name: equals
+				Exception Types: None
+				Parameter Types: java.lang.Object 
+				Return Type: boolean
+				Modifier: public
+			METHOD:
+				Name: toString
+				Exception Types: None
+				Parameter Types: None
+				Return Type: java.lang.String
+				Modifier: public
+			METHOD:
+				Name: hashCode
+				Exception Types: None
+				Parameter Types: None
+				Return Type: int
+				Modifier: public native
+			METHOD:
+				Name: getClass
+				Exception Types: None
+				Parameter Types: None
+				Return Type: java.lang.Class
+				Modifier: public final native
+			METHOD:
+				Name: clone
+				Exception Types: java.lang.CloneNotSupportedException 
+				Parameter Types: None
+				Return Type: java.lang.Object
+				Modifier: protected native
+			METHOD:
+				Name: notify
+				Exception Types: None
+				Parameter Types: None
+				Return Type: void
+				Modifier: public final native
+			METHOD:
+				Name: notifyAll
+				Exception Types: None
+				Parameter Types: None
+				Return Type: void
+				Modifier: public final native
+			METHOD:
+				Name: registerNatives
+				Exception Types: None
+				Parameter Types: None
+				Return Type: void
+				Modifier: private static native
+			** NO FIELDS **
+	INTERFACE: java.io.Serializable
+		** NO SUPERINTERFACE **
+		** NO METHODS **
+		** NO FIELDS **
+	INTERFACE: java.lang.Runnable
+		** NO SUPERINTERFACE **
+		METHOD:
+			Name: run
+			Exception Types: None
+			Parameter Types: None
+			Return Type: void
+			Modifier: public abstract
+		** NO FIELDS **
+	CONSTRUCTOR:
+		Name: ClassA
+		Parameter Types: None
+		Modifier: public
+	CONSTRUCTOR:
+		Name: ClassA
+		Parameter Types: int 
+		Modifier: public
+	METHOD:
+		Name: run
+		Exception Types: None
+		Parameter Types: None
+		Return Type: void
+		Modifier: public
+	METHOD:
+		Name: toString
+		Exception Types: None
+		Parameter Types: None
+		Return Type: java.lang.String
+		Modifier: public
+	METHOD:
+		Name: setVal
+		Exception Types: java.lang.Exception 
+		Parameter Types: int 
+		Return Type: void
+		Modifier: public
+	METHOD:
+		Name: getVal
+		Exception Types: None
+		Parameter Types: None
+		Return Type: int
+		Modifier: public
+	METHOD:
+		Name: printSomething
+		Exception Types: None
+		Parameter Types: None
+		Return Type: void
+		Modifier: private
+	FIELD: 
+		Name: val
+		Type: int
+		Modifier: private
+		Value: 3
+	FIELD: 
+		Name: val2
+		Type: double
+		Modifier: private
+		Value: 0.2
+	FIELD: 
+		Name: val3
+		Type: boolean
+		Modifier: private
+		Value: true
+======================================================

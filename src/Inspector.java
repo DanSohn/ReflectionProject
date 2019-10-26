@@ -21,12 +21,22 @@ public class Inspector {
 
     private void inspectSuperClass(Class c, Object obj, boolean recursive, int depth) throws IllegalAccessException {
         //System.out.println("inspecting super class of " + c);
-        // handling formatting
-        String tab = "";
-        for(int i=0; i<depth; i++){
-            tab += "\t";
-        }
 
+        // handling formatting
+        String[] tabs = getTab(depth);
+        String tab = tabs[0];
+        String tab2 = tabs[1];
+        String tab3 = tabs[2];
+        String tab4 = tabs[3];
+
+        /*
+        System.out.println("Tabbing test:");
+        System.out.println(tab + "here");
+        System.out.println(tab2 + "here");
+        System.out.println(tab3 + "here");
+        System.out.println(tab4 + "here");
+        
+         */
         //print class we are currently looking at
         //check if its an array
         if(c.isArray()){
@@ -50,7 +60,7 @@ public class Inspector {
             return;
         }
         //print next superclass
-        System.out.println(tab + "\tSUPERCLASS: " + superClass.getName());
+        System.out.println(tab2 + "SUPERCLASS: " + superClass.getName());
         inspectClass(superClass, obj, recursive, depth+2);
 
     }
@@ -61,10 +71,8 @@ public class Inspector {
         Class[] interfaces = c.getInterfaces();
 
         // handling formatting
-        String tab = "";
-        for(int i=0; i<depth; i++){
-            tab += "\t";
-        }
+        String[] tabs = getTab(depth);
+        String tab = tabs[0];
 
         if(interfaces.length==0){
             System.out.println(tab + "** NO SUPERINTERFACE **");
@@ -82,11 +90,10 @@ public class Inspector {
     private void inspectConstructor(Class c, int depth){
         depth += 1;
         // handling formatting
-        String tab = "";
-        for(int i=0; i<depth; i++){
-            tab += "\t";
-        }
-        String tab2 = tab + "\t";
+        String[] tabs = getTab(depth);
+        String tab = tabs[0];
+        String tab2 = tabs[1];
+
         // list of each constructors for a class
         Constructor[] constructors = c.getDeclaredConstructors();
         for (int i = 0; i < constructors.length; i++){
@@ -114,11 +121,10 @@ public class Inspector {
     private void inspectMethod(Class c, int depth){
         depth += 1;
         // handling formatting
-        String tab = "";
-        for(int i=0; i<depth; i++){
-            tab += "\t";
-        }
-        String tab2 = tab + "\t";
+        String[] tabs = getTab(depth);
+        String tab = tabs[0];
+        String tab2 = tabs[1];
+
 
         //get methods
         Method[] methods = c.getDeclaredMethods();
@@ -172,11 +178,11 @@ public class Inspector {
     private void inspectField(Class c, Object obj, boolean recursive, int depth) throws IllegalAccessException {
         depth += 1;
         // handling formatting
-        String tab = "";
-        for(int i=0; i<depth; i++){
-            tab += "\t";
-        }
-        String tab2 = tab + "\t";
+        String[] tabs = getTab(depth);
+        String tab = tabs[0];
+        String tab2 = tabs[1];
+        String tab3 = tabs[2];
+        String tab4 = tabs[3];
 
         //get all fields of class c
         Field[] fields = c.getDeclaredFields();
@@ -223,18 +229,18 @@ public class Inspector {
                 //print out name, component type, length, and contents
                 System.out.println(tab2 + "Value: ");
                 //component type:
-                System.out.println(tab2 + "\tType: " + fields[i].getType().getComponentType());
+                System.out.println(tab3 + "Type: " + fields[i].getType().getComponentType());
                 //length:
                 int len = Array.getLength(value);
-                System.out.println(tab2 + "\tLength: " + len);
+                System.out.println(tab3 + "Length: " + len);
                 //contents:
-                System.out.println(tab2 + "\tContents: [");
+                System.out.println(tab3 + "Contents: [");
                 //contents of the array
                 for(int j = 0; j < len; j ++){
                     Object arrObj = Array.get(value, j);
-                    System.out.println(tab2 + "\t\t" + arrObj);
+                    System.out.println(tab4 + arrObj);
                 }
-                System.out.println(tab2 + "\t]");
+                System.out.println(tab3 + "]");
 
 
             }else{
@@ -248,10 +254,28 @@ public class Inspector {
                     System.out.println(tab2 + "Value: " + value.getClass().getName() + "@" + identityHashCode(obj));
                 }
             }
-
-
-
         }
+    }
+
+    private static String[] getTab(int depth){
+        String[] tab = {"","","",""};
+        for(int i=0; i<depth; i++){
+            tab[0] += "\t";
+            tab[1] += "\t";
+            tab[2] += "\t";
+            tab[3] += "\t";
+        }
+        tab[1] += "\t";
+        tab[2] += "\t\t";
+        tab[3] += "\t\t\t";
+        /*
+        System.out.println("Tabbing inside method test:");
+        System.out.println(tab[0] + "here");
+        System.out.println(tab[1] + "here");
+        System.out.println(tab[2] + "here");
+        System.out.println(tab[3] + "here");
+         */
+        return tab;
     }
 
     // past this point is code gotten from https://stackoverflow.com/questions/709961/determining-if-an-object-is-of-primitive-type
@@ -277,5 +301,6 @@ public class Inspector {
         ret.add(Void.class);
         return ret;
     }
+
 
 }
