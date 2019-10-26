@@ -5,7 +5,7 @@ public class Driver {
 
     public static void main(String[] args) throws Exception {
         System.out.println("Starting driver");
-        boolean rec = true;
+        boolean rec = false;
         if (args.length == 1) {
             rec = Boolean.parseBoolean(args[1]);
         }
@@ -21,7 +21,6 @@ public class Driver {
     }
 
     public static void runTest(String filename, Object testObj, boolean recursive) {
-        //System.out.println("Running test");
         try {
             PrintStream old = System.out;
             File file = new File(filename);

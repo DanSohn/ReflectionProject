@@ -1,22 +1,25 @@
 import java.lang.*;
 import java.lang.reflect.*;
+import java.util.*;
+
+import static java.lang.System.identityHashCode;
 
 public class Inspector {
-    public void inspect(Object obj, boolean recursive){
+    public void inspect(Object obj, boolean recursive) throws IllegalAccessException {
         Class c = obj.getClass();
         //System.out.println(c.getName());
-        inspectClass(c, recursive, 0);
+        inspectClass(c, obj, recursive, 0);
     }
 
-    private void inspectClass(Class c, boolean recursive, int depth){
-        inspectSuperClass(c, recursive, depth);
-        inspectInterface(c, recursive, depth);
+    private void inspectClass(Class c, Object obj, boolean recursive, int depth) throws IllegalAccessException {
+        inspectSuperClass(c, obj, recursive, depth);
+        inspectInterface(c, obj, recursive, depth);
         inspectConstructor(c, depth);
         inspectMethod(c, depth);
-        //inspectField(c, recursive, depth);
+        inspectField(c, obj, recursive, depth);
     }
 
-    private void inspectSuperClass(Class c, boolean recursive, int depth){
+    private void inspectSuperClass(Class c, Object obj, boolean recursive, int depth) throws IllegalAccessException {
         //System.out.println("inspecting super class of " + c);
         // handling formatting
         String tab = "";
@@ -35,11 +38,11 @@ public class Inspector {
         }
         //print next superclass
         System.out.println(tab + "\tSUPERCLASS: " + superClass.getName());
-        inspectClass(superClass, recursive, depth+2);
+        inspectClass(superClass, obj, recursive, depth+2);
 
     }
 
-    private void inspectInterface(Class c, boolean recursive, int depth){
+    private void inspectInterface(Class c, Object obj, boolean recursive, int depth) throws IllegalAccessException {
         //System.out.println("inspecting interface for " + c);
         depth += 1;
         Class[] interfaces = c.getInterfaces();
@@ -51,14 +54,14 @@ public class Inspector {
         }
 
         if(interfaces.length==0){
-            System.out.println(tab + "*** NO SUPERINTERFACE ***");
+            System.out.println(tab + "** NO SUPERINTERFACE **");
         }else{
             // class does have interfaces
             for(int i = 0; i < interfaces.length; i++){
                 System.out.println(tab + "INTERFACE: " + interfaces[i]);
-                inspectInterface(interfaces[i], recursive, depth);
+                inspectInterface(interfaces[i], obj, recursive, depth);
                 inspectMethod(interfaces[i], depth);
-
+                inspectField(interfaces[i], obj, recursive, depth);
             }
         }
     }
@@ -89,7 +92,9 @@ public class Inspector {
                 System.out.println("");
             }
 
-            System.out.println(tab2 + "Modifier: " + constructors[i].getModifiers());
+            //modifier
+            int mod = constructors[i].getModifiers();
+            System.out.println(tab2 + "Modifier: " + Modifier.toString(mod));
         }
     }
 
@@ -104,6 +109,12 @@ public class Inspector {
 
         //get methods
         Method[] methods = c.getDeclaredMethods();
+
+        //if no methods
+        if(methods.length == 0){
+            System.out.println(tab + "** NO METHODS **");
+            return;
+        }
         //iterate through all methods
         for (int i = 0; i < methods.length; i++){
             System.out.println(tab + "METHOD:");
@@ -139,13 +150,98 @@ public class Inspector {
             System.out.println(tab2 + "Return Type: " + methods[i].getReturnType().getName());
 
             //modifier
-            System.out.println(tab2 + "Modifier: " + methods[i].getModifiers());
+            int mod = methods[i].getModifiers();
+            System.out.println(tab2 + "Modifier: " + Modifier.toString(mod));
         }
 
     }
 
-    private void inspectField(Class c, boolean recursive, int depth){
+    private void inspectField(Class c, Object obj, boolean recursive, int depth) throws IllegalAccessException {
+        depth += 1;
+        // handling formatting
+        String tab = "";
+        for(int i=0; i<depth; i++){
+            tab += "\t";
+        }
+        String tab2 = tab + "\t";
 
+        //get all fields of class c
+        Field[] fields = c.getDeclaredFields();
+
+        //check if any fields:
+        if(fields.length == 0){
+            System.out.println(tab + "** NO FIELDS **");
+            return;
+        }
+        for(int i = 0; i < fields.length; i++) {
+            System.out.println(tab + "FIELD: ");
+
+            //name
+            System.out.println(tab2 + "Name: " + fields[i].getName());
+
+            //type
+            if(fields[i].getType().isPrimitive()) {
+                System.out.println(tab2 + "Type: " + fields[i].getType());
+            }else if(fields[i].getType().isArray()){
+                System.out.println(tab2 + "Type: " + fields[i].getType().getComponentType() + "[]");
+            }
+            //modifiers
+            int mod = fields[i].getModifiers();
+            System.out.println(tab2 + "Modifier: " + Modifier.toString(mod));
+
+            //value
+            //If the field is an object reference, and recursive is set to false, then simply print out the
+            //“reference value” directly (this will be the name of the object’s class plus the object’s
+            //“identity hash code” ex. java.lang.Object@7d4991ad).
+            fields[i].setAccessible(true);
+            Object value = fields[i].get(obj);
+
+            // if value is null / not init
+            if(value == null) {
+                System.out.println(tab2 + "Value: null");
+                continue;
+            }
+
+            if (isWrapperType(value.getClass())){
+                //if primitive wrapper
+                System.out.println(tab2 + "Value: " + value.toString());
+            }else{
+                //if object reference
+                if (recursive) {
+                    //do i need to use Class getDeclaringClass()
+                } else {
+
+                }
+                System.out.println(tab2 + "Value: " + value.getClass() + "@" + identityHashCode(obj));
+            }
+
+
+
+        }
+    }
+
+    // past this point is code gotten from https://stackoverflow.com/questions/709961/determining-if-an-object-is-of-primitive-type
+    // that checks if an object is a wrapper for a primitive
+    private static final Set<Class<?>> WRAPPER_TYPES = getWrapperTypes();
+
+    public static boolean isWrapperType(Class<?> clazz)
+    {
+        return WRAPPER_TYPES.contains(clazz);
+    }
+
+    private static Set<Class<?>> getWrapperTypes()
+    {
+        Set<Class<?>> ret = new HashSet<Class<?>>();
+        ret.add(Boolean.class);
+        ret.add(Character.class);
+        ret.add(Byte.class);
+        ret.add(Short.class);
+        ret.add(Integer.class);
+        ret.add(Long.class);
+        ret.add(Float.class);
+        ret.add(Double.class);
+        ret.add(Void.class);
+        return ret;
     }
 
 }
