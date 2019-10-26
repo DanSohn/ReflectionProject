@@ -30,7 +30,16 @@ public class Inspector {
         //print class we are currently looking at
         //check if its an array
         if(c.isArray()){
-            System.out.println(tab + "CLASS: " + c.getComponentType().getName() + "[]");
+            // BRUTE FORCING THIS FOR ONE OR TWO ITERATIONS, NOT DOING IN A WHILE LOOP. COULD FIX LATER
+            if(c.getComponentType().isArray()){
+                if(c.getComponentType().getComponentType().isArray()) {
+                    System.out.println(tab + "CLASS: " + c.getComponentType().getComponentType().getComponentType().getName() + "[[[]]]");
+                }else {
+                    System.out.println(tab + "CLASS: " + c.getComponentType().getComponentType().getName() + "[[]]");
+                }
+            }else {
+                System.out.println(tab + "CLASS: " + c.getComponentType().getName() + "[]");
+            }
         }else {
             System.out.println(tab + "CLASS: " + c.getName());
         }
@@ -233,10 +242,11 @@ public class Inspector {
 
                 if (recursive) {
                     //do i need to use Class getDeclaringClass()
+                    //System.out.println("RECURSING************************************************************");
+                    inspectClass(value.getClass(), value, recursive, depth+1);
                 } else {
-
+                    System.out.println(tab2 + "Value: " + value.getClass().getName() + "@" + identityHashCode(obj));
                 }
-                System.out.println(tab2 + "Value: " + value.getClass().getName() + "@" + identityHashCode(obj));
             }
 
 
